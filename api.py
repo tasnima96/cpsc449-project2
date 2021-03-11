@@ -79,7 +79,7 @@ def execute(db, sql, args=()):
 # Route
 
 @post('/users/')
-def create_user(db):
+def create_User(db):
     user = request.json
 
     if not user:
@@ -104,7 +104,7 @@ def create_user(db):
     return  user
 
 @get('/users')
-def search(db):
+def check_Password(db):
     sql = 'SELECT * FROM users'
 
     columns = []
@@ -125,13 +125,15 @@ def search(db):
     return {'users': users}
 
 @post('/users')
-def add_follower():
+def add_Follower():
     new_follower = {'name' : request.json.get('name'),'nameToFollow' : request.json.get('nameToFollow')}
     users.append(new_follower)
     return {'users' : users}
 
 @delete('/users/<nameToRemove>')
-def remove_follower(nameToRemove):
+def remove_Follower(nameToRemove):
     del_follower = [follower for follower in user if follower['nameToRemove'] == nameToRemove]
     users.remove(del_follower[0])
     return {'users': users}
+
+
