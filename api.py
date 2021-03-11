@@ -75,11 +75,29 @@ def execute(db, sql, args=()):
     return id
 
 
-# Routes
+# Route
 
-@get('/users/')
-def users(db):
-    all_users = query(db, 'SELECT * FROM users;')
+@post('/users/')
+def create_user(db):
+    user = request.json
 
-    return {'users': all_users}
+    if not user:
+        abort(400)
 
+    posted_fields = user.keys()
+    required_fields = {'name', 'email', 'password'}
+
+    if not required_fields <= posted_fields:
+        abort(400, f'Missing fields: {required_fields - posted_fields}')
+
+    try:
+        user['id'] = execute(db, '''
+            INSERT INTO users(name, email, password)
+            VALUES(:name, :email, :password)
+            ''', user)
+    except sqlite3.IntegrityError as e:
+        abort(409, str(e))
+
+    response.status = 201
+    response.set_header('Location', f"/books/{book['id']}")
+    return book
