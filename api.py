@@ -1,3 +1,4 @@
+
 #
 # Adapted from "Creating Web APIs with Python and Flask"
 # <https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask>.
@@ -99,5 +100,5 @@ def create_user(db):
         abort(409, str(e))
 
     response.status = 201
-    response.set_header('Location', f"/books/{book['id']}")
-    return book
+    response.set_header('Location', f"/users/{user['id']}")
+    return  user
