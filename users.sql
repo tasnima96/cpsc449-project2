@@ -8,11 +8,13 @@ CREATE TABLE users (
     name VARCHAR,
     email VARCHAR,       
     password VARCHAR,
-    UNIQUE(name, email, password)
+    nameToFollow VARCHAR,
+    nameToRemove VARCHAR,
+    UNIQUE(name, email, password, nameToFollow, nameToRemove)
 );
 
-INSERT INTO users(name, email, password) VALUES('Briyan John','briyan18@gmail.com','Br8541');
-INSERT INTO users(name, email, password) VALUES('Robert Petterson','robert17@gmail.com','Rb9512');
-INSERT INTO users(name, email, password) VALUES('Sean Smith','sean16@gmail.com','Sn2013');
+INSERT INTO users(name, email, password, nameToFollow, nameToRemove) VALUES('Briyan John','briyan18@gmail.com','Br8541', 'Tom', 'Harry');
+INSERT INTO users(name, email, password, nameToFollow, nameToRemove) VALUES('Robert Petterson','robert17@gmail.com','Rb9512', 'Jack', 'Ryan');
+INSERT INTO users(name, email, password, nameToFollow, nameToRemove) VALUES('Sean Smith','sean16@gmail.com','Sn2013', 'Nova', 'Keven');
 COMMIT;
 

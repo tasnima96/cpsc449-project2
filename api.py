@@ -102,3 +102,36 @@ def create_user(db):
     response.status = 201
     response.set_header('Location', f"/users/{user['id']}")
     return  user
+
+@get('/users')
+def search(db):
+    sql = 'SELECT * FROM users'
+
+    columns = []
+    values = []
+
+    for column in ['name', 'password']:
+        if column in request.query:
+            columns.append(column)
+            values.append(request.query[column])
+
+    if columns:
+        sql += ' WHERE '
+        sql += ' AND '.join([f'{column} = ?' for column in columns])
+
+    logging.debug(sql)
+    users = query(db, sql, values)
+
+    return {'users': users}
+
+@post('/users')
+def add_follower():
+    new_follower = {'name' : request.json.get('name'),'nameToFollow' : request.json.get('nameToFollow')}
+    users.append(new_follower)
+    return {'users' : users}
+
+@delete('/users/<nameToRemove>')
+def remove_follower(nameToRemove):
+    del_follower = [follower for follower in user if follower['nameToRemove'] == nameToRemove]
+    users.remove(del_follower[0])
+    return {'users': users}
