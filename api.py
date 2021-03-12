@@ -1,4 +1,4 @@
-
+# Science Fiction Novel API - Bottle Edition
 #
 # Adapted from "Creating Web APIs with Python and Flask"
 # <https://programminghistorian.org/en/lessons/creating-apis-with-python-and-flask>.
@@ -18,7 +18,7 @@ from bottle.ext import sqlite
 app = bottle.default_app()
 app.config.load_config('./etc/api.ini')
 
-plugin = sqlite.Plugin(app.config['sqlite.db'])
+plugin = sqlite.Plugin(app.config['sqlite.dbfile'])
 app.install(plugin)
 
 logging.config.fileConfig(app.config['logging.config'])
@@ -76,7 +76,9 @@ def execute(db, sql, args=()):
     return id
 
 
-# Route
+# Routes
+#
+# Users Service
 
 @post('/users/')
 def create_User(db):
@@ -98,7 +100,6 @@ def create_User(db):
             ''', user)
     except sqlite3.IntegrityError as e:
         abort(409, str(e))
-
     response.status = 201
     response.set_header('Location', f"/users/{user['id']}")
     return  user
@@ -121,19 +122,31 @@ def check_Password(db):
 
     logging.debug(sql)
     users = query(db, sql, values)
-
     return {'users': users}
 
 @post('/users')
 def add_Follower():
     new_follower = {'name' : request.json.get('name'),'nameToFollow' : request.json.get('nameToFollow')}
     users.append(new_follower)
-    return {'users' : users}
+    return {'user' : users}
 
 @delete('/users/<nameToRemove>')
 def remove_Follower(nameToRemove):
-    del_follower = [follower for follower in user if follower['nameToRemove'] == nameToRemove]
+    del_follower = [follower for follower in user if follower['nameToRemove']
     users.remove(del_follower[0])
     return {'users': users}
 
+#
+# Timeines Service
+#
 
+@get('/timelines/<post>')
+def getUserTimeline(name):
+    user_post = [post for post in timeline if post['name'] == name]
+    return{'timeline' : user_post[0]}
+
+@get('/timelines/')
+def getPublicTimeline(db):
+    post = query(db, 'SELECT * FROM timelines;')
+
+    return {'post': all_users}
